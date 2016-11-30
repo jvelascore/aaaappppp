@@ -47,6 +47,8 @@
 #include "bsp_sensors.h"
 #include "bsp_digio.h"
 
+#include "PGN_protocol.h"
+
 #ifndef APP_AUTO_ACK
 #error ERROR: Must define the macro APP_AUTO_ACK for this application.
 #endif
@@ -118,11 +120,6 @@ static uint8_t endDsIDs[NUM_CONNECTIONS];
 static uint8_t byteCountRf = 0;
 static uint8_t rx_buf_rf[NUM_CONNECTIONS];
 static uint8_t tx_buf_rf[NUM_CONNECTIONS];
-//Ct´s (deberian de ir en otro archivo)
-#define GET_NODE_LIST         0x01
-#define TOGGLE_LED            0x12 
-#define REQUEST_FRAME         0x10          
-#define RESPONSE_FRAME        0x08
 
 /* callback handler */
 static uint8_t sCB(linkID_t);
@@ -291,17 +288,7 @@ void main (void)
 static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
 {
   uint8_t i;
-  
-  //esto funciona
-  //if(msg[0] == 0x03){
-    //tx_buf_rf[0] == 0xAA;
-    //SMPL_Send(lid, tx_buf_rf, 1);
-  //  endDsIDs[0]=0xAA;
-  //  SMPL_Send(lid, endDsIDs, 1);
-  //  toggleLED(1);
-  //  toggleLED(2);
-  //}
-  
+
     switch(msg[3])
     {
        case GET_NODE_LIST:
