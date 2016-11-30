@@ -1,0 +1,1 @@
+Error[e27]: Entry "main" in module main_UART_Bridge ( C:\ti\msp430\SimpliciTI_IAR_1_2_0_5xx\Projects\Examples\PGNF5529\Nodo_Pasarela\IAR\CC2500-End Device\Obj\main_UART_Bridge.r43 ) redefined in module main_manyEDs_autoack ( C:\ti\msp430\SimpliciTI_IAR_1_2_0_5xx\Projects\Examples\PGNF5529\Nodo_Pasarela\IAR\CC2500-End Device\Obj\main_manyEDs_autoack.r43 )

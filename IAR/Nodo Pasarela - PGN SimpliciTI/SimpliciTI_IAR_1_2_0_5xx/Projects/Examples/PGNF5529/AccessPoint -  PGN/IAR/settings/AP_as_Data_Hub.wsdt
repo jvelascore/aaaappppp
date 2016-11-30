@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>Ap_as_Data_Hub/CC2500-Access Point</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>316</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+    <Build><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>747</ColumnWidth1><ColumnWidth2>613</ColumnWidth2><ColumnWidth3>65</ColumnWidth3></Build><TerminalIO/><Debug-Log><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1307</ColumnWidth1></Debug-Log><Find-in-Files><ColumnWidth0>440</ColumnWidth0><ColumnWidth1>62</ColumnWidth1><ColumnWidth2>754</ColumnWidth2></Find-in-Files></Static>
+    <Windows>
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-4597-21758</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>Ap_as_Data_Hub</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/Output</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/Configuration</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/Configuration/Access Point</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/Configuration/End Device</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/application</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/application/Access Point</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-30507-31976</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-9292-3289</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab><Tab><Identity>TabID-9712-24709</Identity><TabName>Find in Files</TabName><Factory>Find-in-Files</Factory><Session/></Tab></Tabs><SelectedTab>2</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Configuration\smpl_nwk_config.dat</Filename><XPos>0</XPos><YPos>58</YPos><SelStart>2399</SelStart><SelEnd>3912</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Configuration\Access_Point\smpl_config.dat</Filename><XPos>0</XPos><YPos>51</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\bsp.c</Filename><XPos>0</XPos><YPos>34</YPos><SelStart>3071</SelStart><SelEnd>3071</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\boards\PGNF5529\bsp_board_defs.h</Filename><XPos>0</XPos><YPos>142</YPos><SelStart>8416</SelStart><SelEnd>8429</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\code\uart_intfc.c</Filename><XPos>0</XPos><YPos>67</YPos><SelStart>4273</SelStart><SelEnd>4273</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\uart.h</Filename><XPos>0</XPos><YPos>21</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\uart_intfc.h</Filename><XPos>0</XPos><YPos>39</YPos><SelStart>0</SelStart><SelEnd>0</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Applications\main_AP_Async_Listen_autoack22.c</Filename><XPos>0</XPos><YPos>137</YPos><SelStart>7267</SelStart><SelEnd>7267</SelEnd></Tab><ActiveTab>7</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\code\uart.c</Filename><XPos>0</XPos><YPos>166</YPos><SelStart>5904</SelStart><SelEnd>5904</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-056e1750><key>iaridepm.enu1</key></Toolbar-056e1750></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>634</Bottom><Right>390</Right><x>-2</x><y>-2</y><xscreen>157</xscreen><yscreen>90</yscreen><sizeHorzCX>122656</sizeHorzCX><sizeHorzCY>95643</sizeHorzCY><sizeVertCX>306250</sizeVertCX><sizeVertCY>675877</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>262</Bottom><Right>1282</Right><x>-2</x><y>-2</y><xscreen>1284</xscreen><yscreen>264</yscreen><sizeHorzCX>1003125</sizeHorzCX><sizeHorzCY>280553</sizeHorzCY><sizeVertCX>122656</sizeVertCX><sizeVertCY>95643</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+

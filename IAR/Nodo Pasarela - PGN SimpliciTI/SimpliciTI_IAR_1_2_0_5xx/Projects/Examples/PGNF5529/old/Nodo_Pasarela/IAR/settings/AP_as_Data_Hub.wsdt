@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<Workspace>
+  <ConfigDictionary>
+    
+  <CurrentConfigs><Project>Ap_as_Data_Hub/CC2500-Access Point</Project></CurrentConfigs></ConfigDictionary>
+  <Desktop>
+    <Static>
+      <Workspace>
+        <ColumnWidths>
+          
+          
+          
+          
+        <Column0>205</Column0><Column1>27</Column1><Column2>27</Column2><Column3>27</Column3></ColumnWidths>
+      </Workspace>
+    <Build><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>747</ColumnWidth1><ColumnWidth2>613</ColumnWidth2><ColumnWidth3>65</ColumnWidth3></Build><TerminalIO/><Debug-Log><ColumnWidth0>20</ColumnWidth0><ColumnWidth1>1307</ColumnWidth1></Debug-Log></Static>
+    <Windows>
+      
+    <Wnd0>
+        <Tabs>
+          <Tab>
+            <Identity>TabID-4597-21758</Identity>
+            <TabName>Workspace</TabName>
+            <Factory>Workspace</Factory>
+            <Session>
+              
+            <NodeDict><ExpandedNode>Ap_as_Data_Hub</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/Components</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/Configuration</ExpandedNode><ExpandedNode>Ap_as_Data_Hub/peer applications/Configuration/Range Extender</ExpandedNode></NodeDict></Session>
+          </Tab>
+        </Tabs>
+        
+      <SelectedTab>0</SelectedTab></Wnd0><Wnd1><Tabs><Tab><Identity>TabID-30507-31976</Identity><TabName>Build</TabName><Factory>Build</Factory><Session/></Tab><Tab><Identity>TabID-18278-18876</Identity><TabName>Debug Log</TabName><Factory>Debug-Log</Factory><Session/></Tab></Tabs><SelectedTab>0</SelectedTab></Wnd1></Windows>
+    <Editor>
+      
+      
+      
+      
+    <Pane><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\Applications\main_AP_Async_Listen_autoack.c</Filename><XPos>0</XPos><YPos>148</YPos><SelStart>7097</SelStart><SelEnd>7097</SelEnd></Tab><ActiveTab>0</ActiveTab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\code\uart.c</Filename><XPos>0</XPos><YPos>105</YPos><SelStart>5063</SelStart><SelEnd>5063</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\code\uart_intfc.c</Filename><XPos>0</XPos><YPos>327</YPos><SelStart>11983</SelStart><SelEnd>11983</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\uart.h</Filename><XPos>0</XPos><YPos>38</YPos><SelStart>2989</SelStart><SelEnd>2989</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\drivers\uart_intfc.h</Filename><XPos>0</XPos><YPos>72</YPos><SelStart>4430</SelStart><SelEnd>4430</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\boards\PGNF5529\bsp_board.c</Filename><XPos>0</XPos><YPos>241</YPos><SelStart>9920</SelStart><SelEnd>9920</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\bsp\bsp.h</Filename><XPos>0</XPos><YPos>0</YPos><SelStart>98</SelStart><SelEnd>98</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\simpliciti\nwk_applications\nwk_ioctl.c</Filename><XPos>0</XPos><YPos>213</YPos><SelStart>7845</SelStart><SelEnd>7845</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\..\..\..\..\..\..\..\..\Program Files (x86)\IAR Systems\Embedded Workbench 6.0\430\inc\clib\sysmac.h</Filename><XPos>0</XPos><YPos>80</YPos><SelStart>1294</SelStart><SelEnd>1294</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\..\..\..\..\..\Components\mrfi\radios\family1\mrfi_radio.c</Filename><XPos>0</XPos><YPos>2140</YPos><SelStart>76810</SelStart><SelEnd>76810</SelEnd></Tab><Tab><Factory>TextEditor</Factory><Filename>$WS_DIR$\Configuration\smpl_nwk_config.dat</Filename><XPos>0</XPos><YPos>57</YPos><SelStart>3210</SelStart><SelEnd>3210</SelEnd></Tab></Pane><ActivePane>0</ActivePane><Sizes><Pane><X>1000000</X><Y>1000000</Y></Pane></Sizes><SplitMode>1</SplitMode></Editor>
+    <Positions>
+      
+      
+      
+      
+      
+    <Top><Row0><Sizes><Toolbar-01002758><key>iaridepm.enu1</key></Toolbar-01002758></Sizes></Row0><Row1><Sizes/></Row1><Row2><Sizes/></Row2><Row3><Sizes/></Row3><Row4><Sizes/></Row4><Row5><Sizes/></Row5><Row6><Sizes/></Row6></Top><Left><Row0><Sizes><Wnd0><Rect><Top>-2</Top><Left>-2</Left><Bottom>443</Bottom><Right>279</Right><x>-2</x><y>-2</y><xscreen>200</xscreen><yscreen>200</yscreen><sizeHorzCX>146413</sizeHorzCX><sizeHorzCY>291545</sizeHorzCY><sizeVertCX>205710</sizeVertCX><sizeVertCY>648688</sizeVertCY></Rect></Wnd0></Sizes></Row0></Left><Right><Row0><Sizes/></Row0></Right><Bottom><Row0><Sizes><Wnd1><Rect><Top>-2</Top><Left>-2</Left><Bottom>198</Bottom><Right>1368</Right><x>-2</x><y>-2</y><xscreen>1370</xscreen><yscreen>200</yscreen><sizeHorzCX>1002928</sizeHorzCX><sizeHorzCY>291545</sizeHorzCY><sizeVertCX>146413</sizeVertCX><sizeVertCY>291545</sizeVertCY></Rect></Wnd1></Sizes></Row0></Bottom><Float><Sizes/></Float></Positions>
+  </Desktop>
+</Workspace>
+
+
