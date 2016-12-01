@@ -216,10 +216,9 @@ void main (void)
       }
       
           //Prueba de conexión
-       if (BSP_LED2_IS_ON())
-       {
+       toggleLED(1);
        toggleLED(2);
-       }
+       
       
       //Guardamos la ID que le ha sido asignada al nodo que realiza la nueva conexión
       //y el numero de ED´s que se encuentran conectados actualmente al AP
@@ -288,17 +287,67 @@ void main (void)
 static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
 {
   uint8_t i;
+  int temperature, humidity;
+  uint8_t temp_data[2];
+  uint8_t hum_data[2];
 
     switch(msg[3])
     {
+      
+      case  GET_NUM_NODES:
+                 byteCountRf  = len+1;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = GET_NUM_NODES;
+                 tx_buf_rf[4] = numNode;
+                 tx_buf_rf[5] = 0x0D;
+                 tx_buf_rf[6] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+       break;
+       
+       case  GET_TEMPERATURE:
+                temperature = SHT75_medirTemperatura();
+                temp_data[0] = (temperature>>8) & 0xff; // most significant part first
+                temp_data[1] = temperature & 0xff;
+                byteCountRf  = len+2;
+                tx_buf_rf[0] = byteCountRf - 3;
+                tx_buf_rf[1] = lid;
+                tx_buf_rf[2] = RESPONSE_FRAME;
+                tx_buf_rf[3] = GET_TEMPERATURE;
+                tx_buf_rf[4] = temp_data[0];
+                tx_buf_rf[5] = temp_data[1];
+                tx_buf_rf[6] = 0x0D;
+                tx_buf_rf[7] = 0x0A;
+                SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                byteCountRf = 0;
+       break;
+       
+       case  GET_HUMIDITY:
+                humidity = SHT75_medirHumedad();
+                hum_data[0] = (humidity>>8) & 0xff; // most significant part first
+                hum_data[1] = humidity & 0xff;
+                byteCountRf  = len+2;
+                tx_buf_rf[0] = byteCountRf - 3;
+                tx_buf_rf[1] = lid;
+                tx_buf_rf[2] = RESPONSE_FRAME;
+                tx_buf_rf[3] = GET_TEMPERATURE;
+                tx_buf_rf[4] = hum_data[0];
+                tx_buf_rf[5] = hum_data[1];
+                tx_buf_rf[6] = 0x0D;
+                tx_buf_rf[7] = 0x0A;
+                SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                byteCountRf = 0;
+       break;
+       
        case GET_NODE_LIST:
           
-         switch(msg[2])
-         {
+        // switch(msg[2])
+        // {
            
-           case REQUEST_FRAME:
+        //   case REQUEST_FRAME:
                
-                //byteCountRf = endDsIDs[0]+len+1;
                 byteCountRf = numNode+len+1;
                 tx_buf_rf[0]= byteCountRf - 3;
                 tx_buf_rf[1]= lid;
@@ -316,15 +365,156 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                  toggleLED(1);
                  toggleLED(2);
                  
-           case RESPONSE_FRAME: 
-                break;   
+         //  case RESPONSE_FRAME: 
+         //       break;   
                 
-           default:
+         //  default:
                 break;
-         }
+        // }
          
-           case  TOGGLE_LED:
-            break;
+        case  TOGGLE_LED:
+             
+           byteCountRf  = len-1;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = TOGGLE_LED;
+                 tx_buf_rf[4] = 0x0D;
+                 tx_buf_rf[5] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+          
+              switch(msg[4])
+              {
+              case TOGGLE_LED_1:
+                  toggleLED(1);
+                break;
+              case TOGGLE_LED_2:
+                  toggleLED(2);
+                break;
+              default:
+                break;        
+              }
+         break;
+         
+         case  CLEAR_LED:
+           
+           byteCountRf  = len-1;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = CLEAR_LED;
+                 tx_buf_rf[4] = 0x0D;
+                 tx_buf_rf[5] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+             
+              switch(msg[4])
+              {
+              case CLEAR_LED_1:
+                   if (BSP_LED1_IS_ON())
+                      {
+                      toggleLED(1);
+                      }
+                break;
+              case CLEAR_LED_2:
+                  if (BSP_LED2_IS_ON())
+                      {
+                      toggleLED(2);
+                      }
+                break;
+              default:
+                break;
+                
+                
+               }
+         break;
+         
+         case  SET_LED:
+           
+           byteCountRf  = len-1;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = SET_LED;
+                 tx_buf_rf[4] = 0x0D;
+                 tx_buf_rf[5] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+             
+              switch(msg[4])
+              {
+              case SET_LED_1:
+                   if (!BSP_LED1_IS_ON())
+                      {
+                      toggleLED(1);
+                      }
+                break;
+              case SET_LED_2:
+                  if (!BSP_LED2_IS_ON())
+                      {
+                      toggleLED(2);
+                      }
+                break;
+              default:
+                break;
+               }
+         break;
+         
+         case  SET_ALL_LEDS:
+              if (!BSP_LED1_IS_ON())
+                 {
+                 toggleLED(1);
+                 }
+              if (!BSP_LED2_IS_ON())
+                 {
+                 toggleLED(2);
+                 }
+              byteCountRf  = len;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = SET_ALL_LEDS;
+                 tx_buf_rf[4] = 0x0D;
+                 tx_buf_rf[5] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+         break;
+         
+         case  CLEAR_ALL_LEDS:
+              if (BSP_LED1_IS_ON())
+                 {
+                 toggleLED(1);
+                 }
+              if (BSP_LED2_IS_ON())
+                 {
+                 toggleLED(2);
+                 }
+              byteCountRf  = len;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = CLEAR_ALL_LEDS;
+                 tx_buf_rf[4] = 0x0D;
+                 tx_buf_rf[5] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+         break;
+         
+         case  TOGGLE_ALL_LEDS:
+                 toggleLED(1);
+                 toggleLED(2);
+                 byteCountRf  = len;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = TOGGLE_ALL_LEDS;
+                 tx_buf_rf[4] = 0x0D;
+                 tx_buf_rf[5] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+         break;
+         
             
           default:
             break;

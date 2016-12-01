@@ -49,6 +49,16 @@
 #define NUF_UPDATE_TEMP       0x08
 #define NUF_UPDATE_HUM        0x09
 
+/*----------------------------------------------------------------------------+
+ | DataPayload   Mensaje payload                                       |
+ +----------------------------------------------------------------------------*/
+#define CLEAR_LED_1           0x01
+#define CLEAR_LED_2           0x02
+#define SET_LED_1             0x01
+#define SET_LED_2             0x02
+#define TOGGLE_LED_1          0x01
+#define TOGGLE_LED_2          0x02
+
 #endif  
 /*
  * _PGN_PROTOCOL_H_
