@@ -15,6 +15,8 @@
 #define EOF                           0x0D0A
 #define TIMEOUT_UART                  1000        // For a timeout of 50 ms, SMCLK=8MHz -> 80 = 8MHz/(2*0.050)
 
+#define SLINK_AP                      0x00        /*  AP Link ID*/
+
 /*----------------------------------------------------------------------------+
  | Code BYTE 1                                                         |
  +----------------------------------------------------------------------------*/
@@ -29,6 +31,7 @@
 //manejo de la red
 #define GET_NODE_LIST         0x01
 #define GET_NUM_NODES         0x02
+#define GET_PGN_ID            0x03
 //sensores
 #define GET_TEMPERATURE       0x08
 #define GET_HUMIDITY          0x09

@@ -110,11 +110,13 @@ static linkID_t sLID[NUM_CONNECTIONS] = {0};
 static uint8_t  sNumCurrentPeers = 0;
 static uint8_t  numNode = 0;
 
-static linkID_t sLinkID1 = 0;  /*  Access Point Link ID*/
+static linkID_t sLinkPGN;  /*  PGN Link ID*/
+static linkID_t sLinkAP  = 0x01;  /*  AP Link ID*/
 
 //Guardamos la ID que el AP asigna al ED que se acaba de conectar a la red
 static linkID_t endDevicePeerID[NUM_CONNECTIONS] = {0};
 static uint8_t endDsIDs[NUM_CONNECTIONS];
+
 //Global variables rf 
 //static volatile uint8_t byteCountRf = 0;
 static uint8_t byteCountRf = 0;
@@ -202,8 +204,8 @@ void main (void)
      * call here, or a command shell running in support of a serial connection
      * could set a semaphore that is checked by a function call.
      */ 
-        
-    if (sJoinSem && (sNumCurrentPeers < NUM_CONNECTIONS))
+           
+    if (sJoinSem && (sNumCurrentPeers < NUM_CONNECTIONS))   
     {
       /* listen for a new connection */
       while (1)
@@ -213,12 +215,9 @@ void main (void)
           break;
         }
         /* Implement fail-to-link policy here. otherwise, listen again. */
-      }
-      
-          //Prueba de conexión
-       toggleLED(1);
-       toggleLED(2);
-       
+      }    
+      toggleLED(1);
+      toggleLED(2);
       
       //Guardamos la ID que le ha sido asignada al nodo que realiza la nueva conexión
       //y el numero de ED´s que se encuentran conectados actualmente al AP
@@ -226,7 +225,8 @@ void main (void)
       //endDsIDs[0] = sNumCurrentPeers+1;
       
       endDsIDs[sNumCurrentPeers+1] = sLID[sNumCurrentPeers];
-
+      
+      
          sNumCurrentPeers++;
          
       numNode = sNumCurrentPeers;
@@ -243,14 +243,21 @@ void main (void)
     if (sPeerFrameSem)
     {
       uint8_t     msg[MAX_APP_PAYLOAD], len, i;
-
       /* process all frames waiting */
       for (i=0; i<sNumCurrentPeers; ++i)
       {
         if (SMPL_SUCCESS == SMPL_Receive(sLID[i], msg, &len))
         {
+          if((msg[2] == REQUEST_FRAME) && (msg[1] == SLINK_AP)){
           processMessage(sLID[i], msg, len);
-          
+          }
+          if(msg[2] == RESPONSE_FRAME){
+          SMPL_Send(sLinkPGN, msg, len);  
+          }  
+          else{
+          SMPL_Send(0x01, msg, len);
+          toggleLED(1);
+          }
           BSP_ENTER_CRITICAL_SECTION(intState);
           sPeerFrameSem--;
           BSP_EXIT_CRITICAL_SECTION(intState);
@@ -291,10 +298,14 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
   uint8_t temp_data[2];
   uint8_t hum_data[2];
 
+  //switch(msg[1])
+  //{
+  //case SLINK_AP:
+  //if(msg[1]==SLINK_AP){
     switch(msg[3])
     {
       
-      case  GET_NUM_NODES:
+    case  GET_NUM_NODES:
                  byteCountRf  = len+1;
                  tx_buf_rf[0] = byteCountRf - 3;
                  tx_buf_rf[1] = lid;
@@ -305,9 +316,23 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                  tx_buf_rf[6] = 0x0A;
                  SMPL_Send(lid, tx_buf_rf, byteCountRf);
                  byteCountRf = 0;
-       break;
+    break;
        
-       case  GET_TEMPERATURE:
+    case  GET_PGN_ID:
+                 sLinkPGN = lid;
+                 byteCountRf  = len+1;
+                 tx_buf_rf[0] = byteCountRf - 3;
+                 tx_buf_rf[1] = lid;
+                 tx_buf_rf[2] = RESPONSE_FRAME;
+                 tx_buf_rf[3] = GET_PGN_ID;
+                 tx_buf_rf[4] = sLinkPGN;
+                 tx_buf_rf[5] = 0x0D;
+                 tx_buf_rf[6] = 0x0A;
+                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
+                 byteCountRf = 0;
+    break;
+       
+    case  GET_TEMPERATURE:
                 temperature = SHT75_medirTemperatura();
                 temp_data[0] = (temperature>>8) & 0xff; // most significant part first
                 temp_data[1] = temperature & 0xff;
@@ -322,9 +347,9 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                 tx_buf_rf[7] = 0x0A;
                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
                 byteCountRf = 0;
-       break;
+    break;
        
-       case  GET_HUMIDITY:
+    case  GET_HUMIDITY:
                 humidity = SHT75_medirHumedad();
                 hum_data[0] = (humidity>>8) & 0xff; // most significant part first
                 hum_data[1] = humidity & 0xff;
@@ -339,22 +364,16 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                 tx_buf_rf[7] = 0x0A;
                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
                 byteCountRf = 0;
-       break;
+    break;
        
-       case GET_NODE_LIST:
-          
-        // switch(msg[2])
-        // {
-           
-        //   case REQUEST_FRAME:
-               
+    case GET_NODE_LIST:
                 byteCountRf = numNode+len+1;
                 tx_buf_rf[0]= byteCountRf - 3;
                 tx_buf_rf[1]= lid;
                 tx_buf_rf[2]= RESPONSE_FRAME;
                 tx_buf_rf[3]= GET_NODE_LIST;
-                //tx_buf_rf[4]= endDsIDs[0];
                 tx_buf_rf[4]= numNode;
+                tx_buf_rf[5]= sLinkPGN;
                 for(i=0; i<numNode; i++){
                      tx_buf_rf[i+5]=endDsIDs[i+1];
                    }  
@@ -362,19 +381,10 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                 tx_buf_rf[4+numNode+2]= 0x0A; 
                 SMPL_Send(lid, tx_buf_rf, byteCountRf);
                 byteCountRf = 0;
-                 toggleLED(1);
-                 toggleLED(2);
-                 
-         //  case RESPONSE_FRAME: 
-         //       break;   
-                
-         //  default:
-                break;
-        // }
-         
-        case  TOGGLE_LED:
-             
-           byteCountRf  = len-1;
+    break;
+        
+    case  TOGGLE_LED:
+                 byteCountRf  = len-1;
                  tx_buf_rf[0] = byteCountRf - 3;
                  tx_buf_rf[1] = lid;
                  tx_buf_rf[2] = RESPONSE_FRAME;
@@ -395,11 +405,10 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
               default:
                 break;        
               }
-         break;
+    break;
          
-         case  CLEAR_LED:
-           
-           byteCountRf  = len-1;
+    case  CLEAR_LED:
+                 byteCountRf  = len-1;
                  tx_buf_rf[0] = byteCountRf - 3;
                  tx_buf_rf[1] = lid;
                  tx_buf_rf[2] = RESPONSE_FRAME;
@@ -425,14 +434,11 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                 break;
               default:
                 break;
-                
-                
                }
-         break;
+    break;
          
-         case  SET_LED:
-           
-           byteCountRf  = len-1;
+    case  SET_LED:
+                 byteCountRf  = len-1;
                  tx_buf_rf[0] = byteCountRf - 3;
                  tx_buf_rf[1] = lid;
                  tx_buf_rf[2] = RESPONSE_FRAME;
@@ -459,9 +465,9 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
               default:
                 break;
                }
-         break;
+    break;
          
-         case  SET_ALL_LEDS:
+    case  SET_ALL_LEDS:
               if (!BSP_LED1_IS_ON())
                  {
                  toggleLED(1);
@@ -479,7 +485,7 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                  tx_buf_rf[5] = 0x0A;
                  SMPL_Send(lid, tx_buf_rf, byteCountRf);
                  byteCountRf = 0;
-         break;
+    break;
          
          case  CLEAR_ALL_LEDS:
               if (BSP_LED1_IS_ON())
@@ -499,9 +505,9 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                  tx_buf_rf[5] = 0x0A;
                  SMPL_Send(lid, tx_buf_rf, byteCountRf);
                  byteCountRf = 0;
-         break;
+    break;
          
-         case  TOGGLE_ALL_LEDS:
+    case  TOGGLE_ALL_LEDS:
                  toggleLED(1);
                  toggleLED(2);
                  byteCountRf  = len;
@@ -513,13 +519,18 @@ static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
                  tx_buf_rf[5] = 0x0A;
                  SMPL_Send(lid, tx_buf_rf, byteCountRf);
                  byteCountRf = 0;
-         break;
-         
-            
-          default:
-            break;
-         
+    break;
+                
+    default:
+    break;
     }
+  //}
+  //else{
+  //    SMPL_Send(msg[1], msg, len);
+  //    toggleLED(1);
+  //    toggleLED(2);
+    
+  //}         
 }
 
 
@@ -609,3 +620,273 @@ static void  checkChangeChannel(void)
 #endif
   return;
 }
+
+
+///*----------------------------------------------------------------------------+
+// | Funcionalidad como AP a secas                                  |
+// +----------------------------------------------------------------------------*/
+//
+//#include <string.h>
+//#include "bsp.h"
+//#include "mrfi.h"
+//#include "bsp_leds.h"
+//#include "bsp_buttons.h"
+//#include "nwk_types.h"
+//#include "nwk_api.h"
+//#include "nwk_frame.h"
+//#include "nwk.h"
+//#include "nwk_pll.h"
+//
+//#ifndef APP_AUTO_ACK
+//#error ERROR: Must define the macro APP_AUTO_ACK for this application.
+//#endif
+//
+//void toggleLED(uint8_t);
+//
+///* reserve space for the maximum possible peer Link IDs */
+//static linkID_t sLID[NUM_CONNECTIONS] = {0};
+//static uint8_t  sNumCurrentPeers = 0;
+//
+///* callback handler */
+//static uint8_t sCB(linkID_t);
+//
+///* received message handler */
+//static void processMessage(linkID_t, uint8_t *, uint8_t);
+//
+///* Frequency Agility helper functions */
+//static void    checkChangeChannel(void);
+//static void    changeChannel(void);
+//
+///* work loop semaphores */
+//static volatile uint8_t sPeerFrameSem = 0;
+//static volatile uint8_t sJoinSem = 0;
+//
+//#ifdef FREQUENCY_AGILITY
+///*     ************** BEGIN interference detection support */
+//
+//#define INTERFERNCE_THRESHOLD_DBM (-70)
+//#define SSIZE    25
+//#define IN_A_ROW  3
+//static int8_t  sSample[SSIZE];
+//static uint8_t sChannel = 0;
+//#endif  /* FREQUENCY_AGILITY */
+//
+///* blink LEDs when channel changes... */
+//static volatile uint8_t sBlinky = 0;
+//
+///*     ************** END interference detection support                       */
+//
+//#define SPIN_ABOUT_A_QUARTER_SECOND   NWK_DELAY(250)
+//
+//void main (void)
+//{
+//  bspIState_t intState;
+//
+//#ifdef FREQUENCY_AGILITY
+//  memset(sSample, 0x0, sizeof(sSample));
+//#endif
+//  
+//  BSP_Init();
+//
+//  /* If an on-the-fly device address is generated it must be done before the
+//   * call to SMPL_Init(). If the address is set here the ROM value will not
+//   * be used. If SMPL_Init() runs before this IOCTL is used the IOCTL call
+//   * will not take effect. One shot only. The IOCTL call below is conformal.
+//   */
+//#ifdef I_WANT_TO_CHANGE_DEFAULT_ROM_DEVICE_ADDRESS_PSEUDO_CODE
+//  {
+//    addr_t lAddr;
+//
+//    createRandomAddress(&lAddr);
+//    SMPL_Ioctl(IOCTL_OBJ_ADDR, IOCTL_ACT_SET, &lAddr);
+//  }
+//#endif /* I_WANT_TO_CHANGE_DEFAULT_ROM_DEVICE_ADDRESS_PSEUDO_CODE */
+//
+//  SMPL_Init(sCB);
+//
+//  /* green and red LEDs on solid to indicate waiting for a Join. */
+//  if (!BSP_LED2_IS_ON())
+//  {
+//    toggleLED(2);
+//  }
+//  if (!BSP_LED1_IS_ON())
+//  {
+//    toggleLED(1);
+//  }
+//
+//  /* main work loop */
+//  while (1)
+//  {
+//    /* manage FHSS schedule if FHSS is active */
+//    FHSS_ACTIVE( nwk_pllBackgrounder( false ) );
+//    
+//    /* Wait for the Join semaphore to be set by the receipt of a Join frame from a
+//     * device that supports an End Device.
+//     *
+//     * An external method could be used as well. A button press could be connected
+//     * to an ISR and the ISR could set a semaphore that is checked by a function
+//     * call here, or a command shell running in support of a serial connection
+//     * could set a semaphore that is checked by a function call.
+//     */
+//    if (sJoinSem && (sNumCurrentPeers < NUM_CONNECTIONS))
+//    {
+//      /* listen for a new connection */
+//      while (1)
+//      {
+//        if (SMPL_SUCCESS == SMPL_LinkListen(&sLID[sNumCurrentPeers]))
+//        {
+//          break;
+//        }
+//        /* Implement fail-to-link policy here. otherwise, listen again. */
+//      }
+//
+//      toggleLED(1);
+//      toggleLED(2);
+//      
+//      sNumCurrentPeers++;
+//
+//      BSP_ENTER_CRITICAL_SECTION(intState);
+//      sJoinSem--;
+//      BSP_EXIT_CRITICAL_SECTION(intState);
+//    }
+//
+//    /* Have we received a frame on one of the ED connections?
+//     * No critical section -- it doesn't really matter much if we miss a poll
+//     */
+//    if (sPeerFrameSem)
+//    {
+//      uint8_t     msg[MAX_APP_PAYLOAD], len, i;
+//
+//      /* process all frames waiting */
+//      for (i=0; i<sNumCurrentPeers; ++i)
+//      {
+//        if (SMPL_SUCCESS == SMPL_Receive(sLID[i], msg, &len))
+//        {
+//          processMessage(sLID[i], msg, len);
+//
+//          BSP_ENTER_CRITICAL_SECTION(intState);
+//          sPeerFrameSem--;
+//          BSP_EXIT_CRITICAL_SECTION(intState);
+//        }
+//      }
+//    }
+//    if (BSP_BUTTON1())
+//    {
+//      SPIN_ABOUT_A_QUARTER_SECOND;  /* debounce */
+//      changeChannel();
+//    }
+//    else
+//    {
+//      checkChangeChannel();
+//    }
+//    BSP_ENTER_CRITICAL_SECTION(intState);
+//    if (sBlinky)
+//    {
+//      if (++sBlinky >= 0xF)
+//      {
+//        sBlinky = 1;
+//        toggleLED(1);
+//        toggleLED(2);
+//      }
+//    }
+//    BSP_EXIT_CRITICAL_SECTION(intState);
+//  }
+//
+//}
+//
+//void toggleLED(uint8_t which)
+//{
+//  if (1 == which)
+//  {
+//    BSP_TOGGLE_LED1();
+//  }
+//  else if (2 == which)
+//  {
+//    BSP_TOGGLE_LED2();
+//  }
+//
+//  return;
+//}
+//
+///* Runs in ISR context. Reading the frame should be done in the */
+///* application thread not in the ISR thread. */
+//static uint8_t sCB(linkID_t lid)
+//{
+//  if (lid)
+//  {
+//    sPeerFrameSem++;
+//    sBlinky = 0;
+//  }
+//  else
+//  {
+//    sJoinSem++;
+//  }
+//
+//  /* leave frame to be read by application. */
+//  return 0;
+//}
+//
+//static void processMessage(linkID_t lid, uint8_t *msg, uint8_t len)
+//{
+//  /* do something useful */
+//  if (len)
+//  {
+//    toggleLED(*msg);
+//  }
+//  return;
+//}
+//
+//static void changeChannel(void)
+//{
+//#ifdef FREQUENCY_AGILITY
+//  freqEntry_t freq;
+//
+//  if (++sChannel >= NWK_FREQ_TBL_SIZE)
+//  {
+//    sChannel = 0;
+//  }
+//  freq.logicalChan = sChannel;
+//  SMPL_Ioctl(IOCTL_OBJ_FREQ, IOCTL_ACT_SET, &freq);
+//  BSP_TURN_OFF_LED1();
+//  BSP_TURN_OFF_LED2();
+//  sBlinky = 1;
+//#endif
+//  return;
+//}
+//
+///* implement auto-channel-change policy here... */
+//static void  checkChangeChannel(void)
+//{
+//#ifdef FREQUENCY_AGILITY
+//  int8_t dbm, inARow = 0;
+//
+//  uint8_t i;
+//
+//  memset(sSample, 0x0, SSIZE);
+//  for (i=0; i<SSIZE; ++i)
+//  {
+//    /* quit if we need to service an app frame */
+//    if (sPeerFrameSem || sJoinSem)
+//    {
+//      return;
+//    }
+//    NWK_DELAY(1);
+//    SMPL_Ioctl(IOCTL_OBJ_RADIO, IOCTL_ACT_RADIO_RSSI, (void *)&dbm);
+//    sSample[i] = dbm;
+//
+//    if (dbm > INTERFERNCE_THRESHOLD_DBM)
+//    {
+//      if (++inARow == IN_A_ROW)
+//      {
+//        changeChannel();
+//        break;
+//      }
+//    }
+//    else
+//    {
+//      inARow = 0;
+//    }
+//  }
+//#endif
+//  return;
+//}
